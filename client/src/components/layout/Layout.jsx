@@ -177,7 +177,7 @@ const Layout = () => {
           borderBottom: '1px solid rgba(255,255,255,0.06)',
           height: '70px',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/')}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => navigate('/dashboard')}>
             <img src="/logo.png" alt="VisitHub Logo" style={{ width: '34px', height: '34px', objectFit: 'contain' }} />
             {(isMobile || !isSidebarCollapsed) && (
               <span style={{ fontSize: '1.25rem', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.02em' }}>

@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
           <p>You do not have the required permissions to view this page.</p>
           <button 
             className="btn btn-primary"
-            onClick={() => window.location.href = '/'}
+            onClick={() => window.location.href = '/dashboard'}
           >
             Go to Dashboard
           </button>

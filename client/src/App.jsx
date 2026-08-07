@@ -36,26 +36,26 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          {/* Public landing page */}
+          {/* Public Landing Home Page */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<LandingPage />} />
 
-          {/* Public login pages */}
+          {/* Public Auth Pages */}
           <Route path="/login" element={<Login />} />
           <Route path="/login/:roleType" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Secure layouts */}
+          {/* Secure App Dashboard & Portals */}
           <Route
-            path="/"
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Layout />
               </ProtectedRoute>
             }
           >
-            {/* Common root route redirects to appropriate dashboard */}
             <Route index element={<Dashboard />} />
 
             {/* Admin & Super Admin routes */}

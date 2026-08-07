@@ -30,7 +30,7 @@ const Login = () => {
 
     try {
       await login(username, password, dbRole);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials or role authorization mismatch.');
     } finally {
