@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Disable command buffering so Mongoose never hangs on queries
-mongoose.set('bufferCommands', false);
-
 const dbURI = process.env.MONGODB_URI;
 
 let isConnecting = false;
@@ -140,48 +137,58 @@ const autoSeed = async () => {
   }
 };
 
+let connectionPromise = null;
+
 export const connectDB = async () => {
   if (mongoose.connection.readyState === 1) {
     return;
   }
   
-  if (isConnecting) return;
-  isConnecting = true;
-
-  // 1. Try connecting to MongoDB Atlas URI
-  try {
-    console.log('Attempting connection to Primary MongoDB Atlas Cluster...');
-    const conn = await mongoose.connect(dbURI, {
-      serverSelectionTimeoutMS: 3000,
-      connectTimeoutMS: 3000,
-    });
-    console.log(`✅ MongoDB Atlas Connected: ${conn.connection.host}`);
-    await autoSeed();
-    isConnecting = false;
-    return;
-  } catch (error) {
-    console.warn(`MongoDB Atlas Unavailable (${error.message}). Switching to In-Memory Local Database...`);
-  }
-
-  // 2. Fallback to In-Memory MongoMemoryServer if Atlas is unreachable and not in Vercel serverless environment
-  if (process.env.VERCEL) {
-    console.error('MongoDB connection failed on Vercel. Ensure MONGODB_URI is configured in Vercel Environment Variables.');
-    isConnecting = false;
+  if (connectionPromise) {
+    await connectionPromise;
     return;
   }
 
+  connectionPromise = (async () => {
+    // 1. Try connecting to MongoDB Atlas URI
+    try {
+      if (dbURI) {
+        console.log('Attempting connection to Primary MongoDB Atlas Cluster...');
+        const conn = await mongoose.connect(dbURI, {
+          serverSelectionTimeoutMS: 5000,
+          connectTimeoutMS: 5000,
+        });
+        console.log(`✅ MongoDB Atlas Connected: ${conn.connection.host}`);
+        await autoSeed();
+        return;
+      }
+    } catch (error) {
+      console.warn(`MongoDB Atlas Unavailable (${error.message}).`);
+    }
+
+    // 2. Fallback to In-Memory MongoMemoryServer if Atlas is unreachable and not in Vercel serverless environment
+    if (process.env.VERCEL) {
+      console.error('MongoDB connection failed on Vercel. Ensure MONGODB_URI is configured in Vercel Environment Variables.');
+      return;
+    }
+
+    try {
+      const { MongoMemoryServer } = await import('mongodb-memory-server');
+      const mongoServer = await MongoMemoryServer.create();
+      const mongoUri = mongoServer.getUri();
+      
+      const conn = await mongoose.connect(mongoUri);
+      console.log(`🚀 In-Memory Local Database Connected: ${conn.connection.host}`);
+      await autoSeed();
+    } catch (err) {
+      console.error(`In-Memory DB Fallback Error: ${err.message}`);
+    }
+  })();
+
   try {
-    const { MongoMemoryServer } = await import('mongodb-memory-server');
-    const mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
-    
-    const conn = await mongoose.connect(mongoUri);
-    console.log(`🚀 In-Memory Local Database Connected: ${conn.connection.host}`);
-    await autoSeed();
-  } catch (err) {
-    console.error(`In-Memory DB Fallback Error: ${err.message}`);
+    await connectionPromise;
   } finally {
-    isConnecting = false;
+    connectionPromise = null;
   }
 };
 

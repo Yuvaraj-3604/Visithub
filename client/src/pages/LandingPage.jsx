@@ -116,82 +116,87 @@ const LandingPage = () => {
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid #e5e7eb', padding: '0 20px', height: '70px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        maxWidth: '100%',
+        borderBottom: '1px solid #e5e7eb', height: '70px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: '100%',
       }}>
-        {/* Brand / Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', zIndex: 101 }} onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          <img src="/logo.png" alt="VisitHub" style={{ height: '34px', width: '34px', objectFit: 'contain' }} />
-          <span style={{ fontSize: '1.3rem', fontWeight: '700', color: '#062132', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
-            Visit<span style={{ color: '#0d9488' }}>Hub</span>
-          </span>
-        </div>
-
-        {/* Desktop Navigation Links */}
-        {!isMobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-            <a href="#features" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
-              onMouseEnter={e => e.target.style.color = '#0d9488'}
-              onMouseLeave={e => e.target.style.color = '#475569'}
-            >Features</a>
-            <a href="#how-it-works" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
-              onMouseEnter={e => e.target.style.color = '#0d9488'}
-              onMouseLeave={e => e.target.style.color = '#475569'}
-            >How it Works</a>
-            <button
-              onClick={() => navigate('/login')}
-              style={{
-                color: '#0d9488', fontWeight: '600', fontSize: '1rem',
-                background: 'none', border: 'none', cursor: 'pointer',
-              }}
-            >Login</button>
-            <button
-              onClick={() => navigate('/login')}
-              style={{
-                background: '#0d9488', color: '#fff', border: 'none',
-                padding: '10px 24px', borderRadius: '8px', fontWeight: '600',
-                fontSize: '0.95rem', cursor: 'pointer', transition: 'all 0.2s',
-                boxShadow: '0 2px 8px rgba(13,148,136,0.3)'
-              }}
-              onMouseEnter={e => { e.target.style.background = '#0f766e'; e.target.style.transform = 'translateY(-1px)'; }}
-              onMouseLeave={e => { e.target.style.background = '#0d9488'; e.target.style.transform = 'translateY(0)'; }}
-            >Get Started</button>
+        <div style={{
+          maxWidth: '1200px', width: '100%', padding: '0 24px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          {/* Brand / Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', zIndex: 101 }} onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <img src="/logo.png" alt="VisitHub" style={{ height: '36px', width: '36px', objectFit: 'contain' }} />
+            <span style={{ fontSize: '1.35rem', fontWeight: '700', color: '#062132', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
+              Visit<span style={{ color: '#0d9488' }}>Hub</span>
+            </span>
           </div>
-        )}
 
-        {/* Mobile Hamburger Menu Toggle Button */}
-        {isMobile && (
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle navigation menu"
-            style={{
-              background: 'none',
-              border: 'none',
-              fontSize: '1.5rem',
-              color: '#062132',
-              cursor: 'pointer',
-              padding: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 101,
-            }}
-          >
-            {isMobileMenuOpen ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            )}
-          </button>
-        )}
+          {/* Desktop Navigation Links */}
+          {!isMobile && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
+              <a href="#features" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color = '#0d9488'}
+                onMouseLeave={e => e.target.style.color = '#475569'}
+              >Features</a>
+              <a href="#how-it-works" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color = '#0d9488'}
+                onMouseLeave={e => e.target.style.color = '#475569'}
+              >How it Works</a>
+              <button
+                onClick={() => navigate('/login')}
+                style={{
+                  color: '#0d9488', fontWeight: '600', fontSize: '1rem',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                }}
+              >Login</button>
+              <button
+                onClick={() => navigate('/login')}
+                style={{
+                  background: '#0d9488', color: '#fff', border: 'none',
+                  padding: '10px 24px', borderRadius: '8px', fontWeight: '600',
+                  fontSize: '0.95rem', cursor: 'pointer', transition: 'all 0.2s',
+                  boxShadow: '0 2px 8px rgba(13,148,136,0.3)'
+                }}
+                onMouseEnter={e => { e.target.style.background = '#0f766e'; e.target.style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={e => { e.target.style.background = '#0d9488'; e.target.style.transform = 'translateY(0)'; }}
+              >Get Started</button>
+            </div>
+          )}
+
+          {/* Mobile Hamburger Menu Toggle Button */}
+          {isMobile && (
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                color: '#062132',
+                cursor: 'pointer',
+                padding: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 101,
+              }}
+            >
+              {isMobileMenuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              )}
+            </button>
+          )}
+        </div>
       </nav>
 
       {/* ─── Mobile Navigation Drawer Overlay ─── */}
