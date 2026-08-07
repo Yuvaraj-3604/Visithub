@@ -118,6 +118,14 @@ export const registerUser = async (req, res) => {
   const { firstName, lastName, email, phone, password, role } = req.body;
 
   try {
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
+    }
+
     const cleanEmail = email.toLowerCase().trim();
     const cleanPhone = phone.trim();
 
@@ -213,6 +221,14 @@ export const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
+    }
+
     const cleanEmail = email.toLowerCase().trim();
     let targetUser = null;
 
@@ -266,12 +282,20 @@ export const forgotPassword = async (req, res) => {
       `,
     };
 
-    const emailResult = await sendEmail(emailOptions);
+    let previewUrl = null;
+    try {
+      const emailResult = await sendEmail(emailOptions);
+      if (emailResult && emailResult.previewUrl) {
+        previewUrl = emailResult.previewUrl;
+      }
+    } catch (emailErr) {
+      console.error('Password reset email dispatch error (non-blocking):', emailErr.message);
+    }
 
     res.json({
       message: 'A 6-digit access verification code has been sent to your email.',
       devCode: accessCode,
-      previewUrl: emailResult.previewUrl || null,
+      previewUrl: previewUrl,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -285,6 +309,14 @@ export const resetPassword = async (req, res) => {
   const { email, token, password } = req.body;
 
   try {
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
+    }
+
     const cleanEmail = email.toLowerCase().trim();
     const cleanCode = token.trim();
     let targetUser = null;
