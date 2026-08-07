@@ -86,27 +86,27 @@ const Layout = () => {
     const navs = [];
     if (user?.role === 'super_admin' || user?.role === 'admin') {
       navs.push(
-        { to: '/', label: 'Dashboard', icon: '📊', end: true },
-        { to: '/employees', label: 'Manage Employees', icon: '👥' },
-        { to: '/users', label: 'Manage Accounts', icon: '🔑' },
-        { to: '/reports', label: 'Visitor Reports', icon: '📝' },
-        { to: '/activities', label: 'Activity History', icon: '🕒' },
-        { to: '/support-tickets', label: 'Support Tickets', icon: '💬' },
-        { to: '/settings', label: 'Settings', icon: '⚙️' }
+        { to: '/dashboard', label: 'Dashboard', icon: '📊', end: true },
+        { to: '/dashboard/employees', label: 'Manage Employees', icon: '👥' },
+        { to: '/dashboard/users', label: 'Manage Accounts', icon: '🔑' },
+        { to: '/dashboard/reports', label: 'Visitor Reports', icon: '📝' },
+        { to: '/dashboard/activities', label: 'Activity History', icon: '🕒' },
+        { to: '/dashboard/support-tickets', label: 'Support Tickets', icon: '💬' },
+        { to: '/dashboard/settings', label: 'Settings', icon: '⚙️' }
       );
     } else if (user?.role === 'receptionist') {
       navs.push(
-        { to: '/', label: 'Dashboard', icon: '📊', end: true },
-        { to: '/register-visitor', label: 'Register Visitor', icon: '📝' },
-        { to: '/visitors', label: 'Action Center', icon: '🎟️' },
-        { to: '/visitor-history', label: 'Visitor History', icon: '🕒' },
-        { to: '/settings', label: 'Settings', icon: '⚙️' }
+        { to: '/dashboard', label: 'Dashboard', icon: '📊', end: true },
+        { to: '/dashboard/register-visitor', label: 'Register Visitor', icon: '📝' },
+        { to: '/dashboard/visitors', label: 'Action Center', icon: '🎟️' },
+        { to: '/dashboard/visitor-history', label: 'Visitor History', icon: '🕒' },
+        { to: '/dashboard/settings', label: 'Settings', icon: '⚙️' }
       );
     } else if (user?.role === 'employee') {
       navs.push(
-        { to: '/', label: 'Dashboard', icon: '📊', end: true },
-        { to: '/requests', label: 'Visitor Requests', icon: '✉️' },
-        { to: '/settings', label: 'Settings', icon: '⚙️' }
+        { to: '/dashboard', label: 'Dashboard', icon: '📊', end: true },
+        { to: '/dashboard/requests', label: 'Visitor Requests', icon: '✉️' },
+        { to: '/dashboard/settings', label: 'Settings', icon: '⚙️' }
       );
     }
 
@@ -258,7 +258,7 @@ const Layout = () => {
           )}
 
           <button
-            onClick={() => { setIsMobileOpen(false); navigate('/support'); }}
+            onClick={() => { setIsMobileOpen(false); navigate('/dashboard/support'); }}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -496,7 +496,7 @@ const Layout = () => {
                   </div>
 
                   <button
-                    onClick={() => { setShowProfileDropdown(false); navigate('/settings'); }}
+                    onClick={() => { setShowProfileDropdown(false); navigate('/dashboard/settings'); }}
                     style={{
                       width: '100%',
                       padding: '10px 16px',
@@ -513,7 +513,7 @@ const Layout = () => {
                   </button>
 
                   <button
-                    onClick={() => { setShowProfileDropdown(false); navigate('/settings'); }}
+                    onClick={() => { setShowProfileDropdown(false); navigate('/dashboard/settings'); }}
                     style={{
                       width: '100%',
                       padding: '10px 16px',

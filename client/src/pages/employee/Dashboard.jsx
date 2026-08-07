@@ -129,7 +129,7 @@ const EmployeeDashboard = () => {
           <button 
             className="btn btn-primary"
             style={{ width: '100%', marginTop: '8px' }}
-            onClick={() => navigate('/requests')}
+            onClick={() => navigate('/dashboard/requests')}
           >
             ✉️ Review Requests
           </button>

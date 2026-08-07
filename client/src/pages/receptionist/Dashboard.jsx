@@ -88,13 +88,13 @@ const ReceptionistDashboard = () => {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '8px' }}>
             <button 
               className="btn btn-primary"
-              onClick={() => navigate('/register-visitor')}
+              onClick={() => navigate('/dashboard/register-visitor')}
             >
               📝 Register Visitor
             </button>
             <button 
               className="btn btn-secondary"
-              onClick={() => navigate('/visitors')}
+              onClick={() => navigate('/dashboard/visitors')}
             >
               🎟️ Action Center (Check-In/Out)
             </button>

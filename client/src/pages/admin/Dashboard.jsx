@@ -148,10 +148,10 @@ const AdminDashboard = () => {
           </div>
           
           <div style={{ display: 'flex', gap: '12px' }}>
-            <Link to="/support-tickets" className="btn btn-primary" style={{ background: '#f59e0b', border: 'none', fontWeight: '700', padding: '10px 20px', color: '#000000' }}>
+            <Link to="/dashboard/support-tickets" className="btn btn-primary" style={{ background: '#f59e0b', border: 'none', fontWeight: '700', padding: '10px 20px', color: '#000000' }}>
               💬 Review Support Queries
             </Link>
-            <Link to="/users" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.1)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.2)', fontWeight: '600', padding: '10px 20px' }}>
+            <Link to="/dashboard/users" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.1)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.2)', fontWeight: '600', padding: '10px 20px' }}>
               🔑 Manage System Users
             </Link>
           </div>
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
             <h2 style={{ fontSize: '1.2rem', fontWeight: '750', color: '#062132', margin: 0 }}>
               Recent Visitor Activities
             </h2>
-            <Link to="/activities" style={{ fontSize: '0.85rem', fontWeight: '600', color: '#00bcd4', textDecoration: 'none' }}>
+            <Link to="/dashboard/activities" style={{ fontSize: '0.85rem', fontWeight: '600', color: '#00bcd4', textDecoration: 'none' }}>
               View All ➔
             </Link>
           </div>

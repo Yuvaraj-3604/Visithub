@@ -2,6 +2,17 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import Employee from '../models/Employee.js';
 
+const formatEmployeeId = (emp) => {
+  if (!emp) return null;
+  if (typeof emp === 'object' && emp._id) {
+    return {
+      ...emp,
+      _id: emp._id.toString(),
+    };
+  }
+  return { _id: emp.toString() };
+};
+
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
@@ -17,10 +28,7 @@ export const getUsers = async (req, res) => {
       return {
         ...uObj,
         _id: uObj._id.toString(),
-        employeeId: uObj.employee_id ? {
-          ...uObj.employee_id,
-          _id: uObj.employee_id._id.toString()
-        } : null,
+        employeeId: formatEmployeeId(uObj.employee_id),
         createdAt: uObj.created_at,
       };
     });
@@ -78,10 +86,7 @@ export const createUser = async (req, res) => {
     res.status(201).json({
       ...uObj,
       _id: uObj._id.toString(),
-      employeeId: uObj.employee_id ? {
-        ...uObj.employee_id,
-        _id: uObj.employee_id._id.toString()
-      } : null,
+      employeeId: formatEmployeeId(uObj.employee_id),
       createdAt: uObj.created_at,
     });
   } catch (error) {
@@ -156,10 +161,7 @@ export const updateUser = async (req, res) => {
     res.json({
       ...uObj,
       _id: uObj._id.toString(),
-      employeeId: uObj.employee_id ? {
-        ...uObj.employee_id,
-        _id: uObj.employee_id._id.toString()
-      } : null,
+      employeeId: formatEmployeeId(uObj.employee_id),
       createdAt: uObj.created_at,
     });
   } catch (error) {
