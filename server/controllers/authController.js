@@ -6,6 +6,17 @@ import generateToken from '../utils/generateToken.js';
 import { sendEmail } from '../utils/emailService.js';
 import { connectDB } from '../config/db.js';
 
+const formatEmployeeDetails = (emp) => {
+  if (!emp) return null;
+  if (typeof emp === 'object' && emp._id) {
+    return {
+      ...emp,
+      _id: emp._id.toString(),
+    };
+  }
+  return { _id: emp.toString() };
+};
+
 // @desc    Auth user & get token
 // @route   POST /api/auth/login
 // @access  Public
@@ -66,10 +77,7 @@ export const loginUser = async (req, res) => {
         _id: userObj._id.toString(),
         username: userObj.username,
         role: userObj.role,
-        employeeDetails: userObj.employee_id ? {
-          ...userObj.employee_id,
-          _id: userObj.employee_id._id.toString()
-        } : null,
+        employeeDetails: formatEmployeeDetails(userObj.employee_id),
         token: generateToken(userObj._id),
       });
     } else {
@@ -93,10 +101,7 @@ export const getUserProfile = async (req, res) => {
         _id: userObj._id.toString(),
         username: userObj.username,
         role: userObj.role,
-        employeeDetails: userObj.employee_id ? {
-          ...userObj.employee_id,
-          _id: userObj.employee_id._id.toString()
-        } : null,
+        employeeDetails: formatEmployeeDetails(userObj.employee_id),
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -193,10 +198,7 @@ export const registerUser = async (req, res) => {
         _id: createdUser._id.toString(),
         username: createdUser.username,
         role: createdUser.role,
-        employeeDetails: {
-          ...employeeObj,
-          _id: employeeObj._id.toString()
-        },
+        employeeDetails: formatEmployeeDetails(employeeObj),
       },
     });
   } catch (error) {
