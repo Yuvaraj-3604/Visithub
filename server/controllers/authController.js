@@ -18,6 +18,10 @@ export const loginUser = async (req, res) => {
       await connectDB();
     }
 
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
+    }
+
     if (!username || !password) {
       return res.status(400).json({ message: 'Please provide both username and password' });
     }

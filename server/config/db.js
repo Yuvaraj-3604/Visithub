@@ -137,16 +137,14 @@ const autoSeed = async () => {
   }
 };
 
-let connectionPromise = null;
-
 export const connectDB = async () => {
   if (mongoose.connection.readyState === 1) {
-    return;
+    return true;
   }
   
   if (connectionPromise) {
     await connectionPromise;
-    return;
+    return mongoose.connection.readyState === 1;
   }
 
   connectionPromise = (async () => {
@@ -168,7 +166,7 @@ export const connectDB = async () => {
 
     // 2. Fallback to In-Memory MongoMemoryServer if Atlas is unreachable and not in Vercel serverless environment
     if (process.env.VERCEL) {
-      console.error('MongoDB connection failed on Vercel. Ensure MONGODB_URI is configured in Vercel Environment Variables.');
+      console.error('MongoDB connection failed on Vercel.');
       return;
     }
 
@@ -190,6 +188,8 @@ export const connectDB = async () => {
   } finally {
     connectionPromise = null;
   }
+
+  return mongoose.connection.readyState === 1;
 };
 
 export default connectDB;
