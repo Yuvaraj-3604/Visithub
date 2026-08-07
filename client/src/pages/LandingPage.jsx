@@ -12,6 +12,21 @@ const LandingPage = () => {
     totalVisitors: 0
   });
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchPublicStats = async () => {
       try {
@@ -92,7 +107,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div style={{ fontFamily: "'Outfit', 'Inter', sans-serif", background: '#ffffff', minHeight: '100vh', color: '#062132' }}>
+    <div style={{ fontFamily: "'Outfit', 'Inter', sans-serif", background: '#ffffff', minHeight: '100vh', color: '#062132', width: '100%', overflowX: 'hidden' }}>
       
       {/* Google Font */}
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -101,50 +116,189 @@ const LandingPage = () => {
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
         background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid #e5e7eb', padding: '0 24px', height: '70px',
+        borderBottom: '1px solid #e5e7eb', padding: '0 20px', height: '70px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         maxWidth: '100%',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <img src="/logo.png" alt="VisitHub" style={{ height: '36px', width: '36px', objectFit: 'contain' }} />
-          <span style={{ fontSize: '1.35rem', fontWeight: '700', color: '#062132', letterSpacing: '-0.02em' }}>
+        {/* Brand / Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', zIndex: 101 }} onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+          <img src="/logo.png" alt="VisitHub" style={{ height: '34px', width: '34px', objectFit: 'contain' }} />
+          <span style={{ fontSize: '1.3rem', fontWeight: '700', color: '#062132', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
             Visit<span style={{ color: '#0d9488' }}>Hub</span>
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-          <a href="#features" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
-            onMouseEnter={e => e.target.style.color = '#0d9488'}
-            onMouseLeave={e => e.target.style.color = '#475569'}
-          >Features</a>
-          <a href="#how-it-works" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
-            onMouseEnter={e => e.target.style.color = '#0d9488'}
-            onMouseLeave={e => e.target.style.color = '#475569'}
-          >How it Works</a>
+        {/* Desktop Navigation Links */}
+        {!isMobile && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+            <a href="#features" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
+              onMouseEnter={e => e.target.style.color = '#0d9488'}
+              onMouseLeave={e => e.target.style.color = '#475569'}
+            >Features</a>
+            <a href="#how-it-works" style={{ color: '#475569', textDecoration: 'none', fontSize: '1rem', fontWeight: '500', transition: 'color 0.2s' }}
+              onMouseEnter={e => e.target.style.color = '#0d9488'}
+              onMouseLeave={e => e.target.style.color = '#475569'}
+            >How it Works</a>
+            <button
+              onClick={() => navigate('/login')}
+              style={{
+                color: '#0d9488', fontWeight: '600', fontSize: '1rem',
+                background: 'none', border: 'none', cursor: 'pointer',
+              }}
+            >Login</button>
+            <button
+              onClick={() => navigate('/login')}
+              style={{
+                background: '#0d9488', color: '#fff', border: 'none',
+                padding: '10px 24px', borderRadius: '8px', fontWeight: '600',
+                fontSize: '0.95rem', cursor: 'pointer', transition: 'all 0.2s',
+                boxShadow: '0 2px 8px rgba(13,148,136,0.3)'
+              }}
+              onMouseEnter={e => { e.target.style.background = '#0f766e'; e.target.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.target.style.background = '#0d9488'; e.target.style.transform = 'translateY(0)'; }}
+            >Get Started</button>
+          </div>
+        )}
+
+        {/* Mobile Hamburger Menu Toggle Button */}
+        {isMobile && (
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
             style={{
-              color: '#0d9488', fontWeight: '600', fontSize: '1rem',
-              background: 'none', border: 'none', cursor: 'pointer',
+              background: 'none',
+              border: 'none',
+              fontSize: '1.5rem',
+              color: '#062132',
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 101,
             }}
-          >Login</button>
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              background: '#0d9488', color: '#fff', border: 'none',
-              padding: '10px 24px', borderRadius: '8px', fontWeight: '600',
-              fontSize: '0.95rem', cursor: 'pointer', transition: 'all 0.2s',
-              boxShadow: '0 2px 8px rgba(13,148,136,0.3)'
-            }}
-            onMouseEnter={e => { e.target.style.background = '#0f766e'; e.target.style.transform = 'translateY(-1px)'; }}
-            onMouseLeave={e => { e.target.style.background = '#0d9488'; e.target.style.transform = 'translateY(0)'; }}
-          >Get Started</button>
-        </div>
+          >
+            {isMobileMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            )}
+          </button>
+        )}
       </nav>
+
+      {/* ─── Mobile Navigation Drawer Overlay ─── */}
+      {isMobile && isMobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(6, 33, 50, 0.4)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 98,
+            }}
+          />
+          
+          {/* Slide-down Menu Panel */}
+          <div style={{
+            position: 'fixed',
+            top: '70px',
+            left: 0,
+            right: 0,
+            background: '#ffffff',
+            borderBottom: '1px solid #e5e7eb',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+            padding: '20px 24px 28px',
+            zIndex: 99,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}>
+            <a
+              href="#features"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                color: '#062132',
+                textDecoration: 'none',
+                fontSize: '1.05rem',
+                fontWeight: '600',
+                padding: '12px 0',
+                borderBottom: '1px solid #f1f5f9',
+              }}
+            >
+              Features
+            </a>
+            <a
+              href="#how-it-works"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                color: '#062132',
+                textDecoration: 'none',
+                fontSize: '1.05rem',
+                fontWeight: '600',
+                padding: '12px 0',
+                borderBottom: '1px solid #f1f5f9',
+              }}
+            >
+              How it Works
+            </a>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('/login'); }}
+                style={{
+                  width: '100%',
+                  background: '#f0fdfa',
+                  color: '#0d9488',
+                  border: '1.5px solid #0d9488',
+                  padding: '12px 0',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                }}
+              >
+                Login
+              </button>
+
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate('/register'); }}
+                style={{
+                  width: '100%',
+                  background: '#0d9488',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '12px 0',
+                  borderRadius: '10px',
+                  fontWeight: '700',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 12px rgba(13,148,136,0.3)',
+                }}
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ─── Hero Section ─── */}
       <section style={{
-        paddingTop: '140px', paddingBottom: '80px',
+        paddingTop: isMobile ? '110px' : '140px',
+        paddingBottom: isMobile ? '48px' : '80px',
         textAlign: 'center', position: 'relative', overflow: 'hidden',
         background: 'linear-gradient(180deg, #f0fdfa 0%, #ffffff 60%)',
       }}>
@@ -152,19 +306,20 @@ const LandingPage = () => {
         <div style={{ position: 'absolute', top: '-120px', right: '-80px', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(13,148,136,0.08), transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-100px', left: '-60px', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(13,148,136,0.06), transparent 70%)', pointerEvents: 'none' }} />
 
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
           <div style={{
             display: 'inline-block', background: 'rgba(13,148,136,0.08)',
             color: '#0d9488', padding: '6px 16px', borderRadius: '100px',
-            fontSize: '0.85rem', fontWeight: '600', marginBottom: '24px',
+            fontSize: '0.85rem', fontWeight: '600', marginBottom: '20px',
             letterSpacing: '0.05em', textTransform: 'uppercase',
           }}>
             ✦ Visitor Pass Management System
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: '800',
-            lineHeight: '1.15', color: '#062132', marginBottom: '20px',
+            fontSize: isMobile ? '2.1rem' : 'clamp(2.2rem, 5vw, 3.5rem)',
+            fontWeight: '800',
+            lineHeight: '1.2', color: '#062132', marginBottom: '20px',
             letterSpacing: '-0.03em',
           }}>
             Simple Yet Effective<br />
@@ -172,34 +327,44 @@ const LandingPage = () => {
           </h1>
 
           <p style={{
-            fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: '#64748b',
-            maxWidth: '650px', margin: '0 auto 36px', lineHeight: '1.7',
+            fontSize: isMobile ? '1rem' : 'clamp(1rem, 2vw, 1.2rem)', color: '#64748b',
+            maxWidth: '650px', margin: '0 auto 32px', lineHeight: '1.6',
           }}>
             Keep your workplace safe and manage visitors at any scale with our simple yet effective 
             enterprise-grade visitor management software. Register, approve, check-in and check-out — all in one place.
           </p>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <div style={{
+            display: 'flex',
+            justify: 'center',
+            gap: '12px',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            maxWidth: isMobile ? '320px' : 'none',
+            margin: '0 auto',
+          }}>
             <button
               onClick={() => navigate('/login')}
               style={{
+                width: isMobile ? '100%' : 'auto',
                 background: '#0d9488', color: '#fff', border: 'none',
-                padding: '14px 36px', borderRadius: '10px', fontWeight: '700',
+                padding: '14px 32px', borderRadius: '10px', fontWeight: '700',
                 fontSize: '1.05rem', cursor: 'pointer', transition: 'all 0.25s',
                 boxShadow: '0 4px 16px rgba(13,148,136,0.35)',
                 letterSpacing: '0.01em',
               }}
-              onMouseEnter={e => { e.target.style.background = '#0f766e'; e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 6px 24px rgba(13,148,136,0.45)'; }}
-              onMouseLeave={e => { e.target.style.background = '#0d9488'; e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 4px 16px rgba(13,148,136,0.35)'; }}
+              onMouseEnter={e => { e.target.style.background = '#0f766e'; e.target.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.target.style.background = '#0d9488'; e.target.style.transform = 'translateY(0)'; }}
             >
               Access Portal →
             </button>
             <button
               onClick={() => navigate('/register')}
               style={{
+                width: isMobile ? '100%' : 'auto',
                 background: 'transparent', color: '#0d9488', 
                 border: '2px solid #0d9488',
-                padding: '14px 36px', borderRadius: '10px', fontWeight: '700',
+                padding: '14px 32px', borderRadius: '10px', fontWeight: '700',
                 fontSize: '1.05rem', cursor: 'pointer', transition: 'all 0.25s',
               }}
               onMouseEnter={e => { e.target.style.background = '#f0fdfa'; e.target.style.transform = 'translateY(-2px)'; }}
@@ -212,39 +377,42 @@ const LandingPage = () => {
 
         {/* Hero illustration area */}
         <div style={{
-          maxWidth: '1000px', margin: '60px auto 0', padding: '0 24px', position: 'relative', zIndex: 1,
+          maxWidth: '1000px', margin: isMobile ? '40px auto 0' : '60px auto 0', padding: '0 16px', position: 'relative', zIndex: 1,
         }}>
           <div style={{
             background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-            borderRadius: '20px', padding: '40px',
+            borderRadius: '20px', padding: isMobile ? '24px 16px' : '40px',
             boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
             border: '1px solid rgba(255,255,255,0.05)',
             position: 'relative', overflow: 'hidden',
           }}>
             {/* Simulated dashboard mockup */}
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }} />
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#eab308' }} />
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#22c55e' }} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px' }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(160px, 1fr))',
+              gap: '12px',
+            }}>
               {[
-                { label: "Today's Visitors", value: dbStats.todayVisitors, color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.1)' },
-                { label: 'Currently Inside', value: dbStats.currentlyInside, color: '#4ade80', bg: 'rgba(74, 222, 128, 0.1)' },
-                { label: 'Pending Approval', value: dbStats.pendingRequests, color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.1)' },
-                { label: 'Total Employees', value: dbStats.totalEmployees, color: '#c084fc', bg: 'rgba(192, 132, 252, 0.1)' },
+                { label: "Today's Visitors", value: dbStats.todayVisitors, color: '#38bdf8' },
+                { label: 'Currently Inside', value: dbStats.currentlyInside, color: '#4ade80' },
+                { label: 'Pending Approval', value: dbStats.pendingRequests, color: '#fbbf24' },
+                { label: 'Total Employees', value: dbStats.totalEmployees, color: '#c084fc' },
               ].map((card, i) => (
                 <div key={i} style={{
                   background: 'rgba(255,255,255,0.06)', borderRadius: '14px',
-                  padding: '20px 16px', borderLeft: `4px solid ${card.color}`,
+                  padding: isMobile ? '16px 12px' : '20px 16px', borderLeft: `4px solid ${card.color}`,
                   textAlign: 'left', backdropFilter: 'blur(8px)',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                  transition: 'transform 0.2s',
                 }}>
-                  <div style={{ fontSize: '2.25rem', fontWeight: '800', color: card.color, lineHeight: '1', marginBottom: '8px' }}>
+                  <div style={{ fontSize: isMobile ? '1.75rem' : '2.25rem', fontWeight: '800', color: card.color, lineHeight: '1', marginBottom: '6px' }}>
                     {card.value}
                   </div>
-                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.8)', fontWeight: '600', letterSpacing: '0.01em' }}>
+                  <div style={{ fontSize: isMobile ? '0.78rem' : '0.85rem', color: 'rgba(255,255,255,0.8)', fontWeight: '600', letterSpacing: '0.01em' }}>
                     {card.label}
                   </div>
                 </div>
@@ -256,16 +424,18 @@ const LandingPage = () => {
 
       {/* ─── Stats Bar ─── */}
       <section style={{
-        background: '#0f172a', padding: '40px 24px',
+        background: '#0f172a', padding: isMobile ? '32px 16px' : '40px 24px',
       }}>
         <div style={{
           maxWidth: '900px', margin: '0 auto',
-          display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '24px',
+          display: 'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: '24px',
         }}>
           {stats.map((s, i) => (
             <div key={i} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '2rem', fontWeight: '800', color: '#0d9488' }}>{s.value}</div>
-              <div style={{ fontSize: '0.9rem', color: '#94a3b8', fontWeight: '500', marginTop: '4px' }}>{s.label}</div>
+              <div style={{ fontSize: isMobile ? '1.6rem' : '2rem', fontWeight: '800', color: '#0d9488' }}>{s.value}</div>
+              <div style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: '500', marginTop: '4px' }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -273,9 +443,9 @@ const LandingPage = () => {
 
       {/* ─── Features Section ─── */}
       <section id="features" style={{
-        padding: '80px 24px', maxWidth: '1100px', margin: '0 auto',
+        padding: isMobile ? '56px 16px' : '80px 24px', maxWidth: '1100px', margin: '0 auto',
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+        <div style={{ textAlign: 'center', marginBottom: isMobile ? '36px' : '56px' }}>
           <div style={{
             display: 'inline-block', background: 'rgba(13,148,136,0.08)',
             color: '#0d9488', padding: '6px 16px', borderRadius: '100px',
@@ -284,26 +454,26 @@ const LandingPage = () => {
           }}>
             Features
           </div>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#062132', letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: isMobile ? '1.75rem' : 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#062132', letterSpacing: '-0.02em' }}>
             Everything You Need to Manage Visitors
           </h2>
-          <p style={{ color: '#64748b', fontSize: '1.1rem', maxWidth: '600px', margin: '12px auto 0' }}>
+          <p style={{ color: '#64748b', fontSize: isMobile ? '1rem' : '1.1rem', maxWidth: '600px', margin: '12px auto 0' }}>
             A complete visitor management solution built for modern workplaces.
           </p>
         </div>
 
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '28px',
+          display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: isMobile ? '20px' : '28px',
         }}>
           {features.map((f, i) => (
             <div key={i} style={{
-              background: '#f8fafc', borderRadius: '16px', padding: '32px',
+              background: '#f8fafc', borderRadius: '16px', padding: isMobile ? '24px 20px' : '32px',
               border: '1px solid #e2e8f0', transition: 'all 0.3s',
               cursor: 'default',
             }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; e.currentTarget.style.borderColor = '#0d9488'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = '#0d9488'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
             >
               <div style={{
                 width: '48px', height: '48px', borderRadius: '12px',
@@ -321,7 +491,7 @@ const LandingPage = () => {
 
       {/* ─── How it Works ─── */}
       <section id="how-it-works" style={{
-        padding: '80px 24px', background: '#f0fdfa',
+        padding: isMobile ? '56px 16px' : '80px 24px', background: '#f0fdfa',
       }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
           <div style={{
@@ -332,11 +502,11 @@ const LandingPage = () => {
           }}>
             How it Works
           </div>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#062132', marginBottom: '48px', letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: isMobile ? '1.75rem' : 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#062132', marginBottom: isMobile ? '32px' : '48px', letterSpacing: '-0.02em' }}>
             From Registration to Checkout in 4 Steps
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))', gap: isMobile ? '16px' : '24px' }}>
             {[
               { step: '01', title: 'Register', desc: 'Receptionist registers the visitor with host details.' },
               { step: '02', title: 'Approve', desc: 'Host employee reviews and approves or rejects the request.' },
@@ -344,9 +514,9 @@ const LandingPage = () => {
               { step: '04', title: 'Check Out', desc: 'Visit complete. Full audit log is recorded automatically.' },
             ].map((s, i) => (
               <div key={i} style={{
-                background: '#ffffff', borderRadius: '16px', padding: '32px 24px',
+                background: '#ffffff', borderRadius: '16px', padding: isMobile ? '24px 20px' : '32px 24px',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0',
-                position: 'relative',
+                position: 'relative', textAlign: 'left',
               }}>
                 <div style={{
                   fontSize: '2.5rem', fontWeight: '900', color: 'rgba(13,148,136,0.12)',
@@ -367,21 +537,30 @@ const LandingPage = () => {
 
       {/* ─── CTA Section ─── */}
       <section style={{
-        padding: '80px 24px',
+        padding: isMobile ? '56px 16px' : '80px 24px',
         background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         textAlign: 'center',
       }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#ffffff', marginBottom: '16px', letterSpacing: '-0.02em' }}>
+          <h2 style={{ fontSize: isMobile ? '1.75rem' : 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#ffffff', marginBottom: '16px', letterSpacing: '-0.02em' }}>
             Ready to Secure Your Workplace?
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '36px', lineHeight: '1.6' }}>
+          <p style={{ color: '#94a3b8', fontSize: isMobile ? '1rem' : '1.1rem', marginBottom: '32px', lineHeight: '1.6' }}>
             Start managing visitors efficiently today. Access your portal or create a new account to get started.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <div style={{
+            display: 'flex',
+            justify: 'center',
+            gap: '12px',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            maxWidth: isMobile ? '320px' : 'none',
+            margin: '0 auto',
+          }}>
             <button
               onClick={() => navigate('/login')}
               style={{
+                width: isMobile ? '100%' : 'auto',
                 background: '#0d9488', color: '#fff', border: 'none',
                 padding: '14px 36px', borderRadius: '10px', fontWeight: '700',
                 fontSize: '1.05rem', cursor: 'pointer', transition: 'all 0.25s',
@@ -395,6 +574,7 @@ const LandingPage = () => {
             <button
               onClick={() => navigate('/register')}
               style={{
+                width: isMobile ? '100%' : 'auto',
                 background: 'transparent', color: '#fff', border: '2px solid rgba(255,255,255,0.3)',
                 padding: '14px 36px', borderRadius: '10px', fontWeight: '700',
                 fontSize: '1.05rem', cursor: 'pointer', transition: 'all 0.25s',
@@ -410,7 +590,7 @@ const LandingPage = () => {
 
       {/* ─── Footer ─── */}
       <footer style={{
-        padding: '32px 24px', background: '#0f172a', borderTop: '1px solid rgba(255,255,255,0.06)',
+        padding: '32px 20px', background: '#0f172a', borderTop: '1px solid rgba(255,255,255,0.06)',
         textAlign: 'center',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '12px' }}>
