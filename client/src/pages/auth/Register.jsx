@@ -70,7 +70,8 @@ const Register = () => {
       }, 3000);
 
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      console.error('Registration error:', err);
+      setError(err.response?.data?.message || err.message || 'Registration failed. Please check network connection and try again.');
     } finally {
       setLoading(false);
     }

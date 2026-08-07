@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../services/api.js';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchPublicStats = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/reports/public-stats');
+        const res = await API.get('/reports/public-stats');
         if (res.data) {
           setDbStats(res.data);
         }
