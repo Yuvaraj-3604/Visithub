@@ -29,10 +29,6 @@ export const loginUser = async (req, res) => {
       await connectDB();
     }
 
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
-    }
-
     if (!username || !password) {
       return res.status(400).json({ message: 'Please provide both username and password' });
     }
@@ -120,10 +116,6 @@ export const registerUser = async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
       await connectDB();
-    }
-
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
     }
 
     const cleanEmail = email.toLowerCase().trim();
@@ -225,10 +217,6 @@ export const forgotPassword = async (req, res) => {
       await connectDB();
     }
 
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
-    }
-
     const cleanEmail = email.toLowerCase().trim();
     let targetUser = null;
 
@@ -311,10 +299,6 @@ export const resetPassword = async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
       await connectDB();
-    }
-
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({ message: 'Database is currently connecting. Please try again in a few seconds.' });
     }
 
     const cleanEmail = email.toLowerCase().trim();
