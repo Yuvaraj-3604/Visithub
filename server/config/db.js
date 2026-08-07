@@ -160,7 +160,13 @@ export const connectDB = async () => {
     console.warn(`MongoDB Atlas Unavailable (${error.message}). Switching to In-Memory Local Database...`);
   }
 
-  // 2. Fallback to In-Memory MongoMemoryServer if Atlas is unreachable
+  // 2. Fallback to In-Memory MongoMemoryServer if Atlas is unreachable and not in Vercel serverless environment
+  if (process.env.VERCEL) {
+    console.error('MongoDB connection failed on Vercel. Ensure MONGODB_URI is configured in Vercel Environment Variables.');
+    isConnecting = false;
+    return;
+  }
+
   try {
     const { MongoMemoryServer } = await import('mongodb-memory-server');
     const mongoServer = await MongoMemoryServer.create();
