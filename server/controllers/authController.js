@@ -18,10 +18,25 @@ export const loginUser = async (req, res) => {
       await connectDB();
     }
 
-    const user = await User.findOne({ username: username.toLowerCase().trim() }).populate('employee_id');
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Please provide both username and password' });
+    }
+
+    const cleanUsername = username.toLowerCase().trim();
+
+    // 1. Find user account by username
+    let user = await User.findOne({ username: cleanUsername }).populate('employee_id');
+
+    // 2. Fallback: Find user account by linked employee email address
+    if (!user) {
+      const emp = await Employee.findOne({ email: cleanUsername });
+      if (emp) {
+        user = await User.findOne({ employee_id: emp._id }).populate('employee_id');
+      }
+    }
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Enforce role-specific portal access (Separate Login Pages)
+      // Role-specific portal authorization checks
       if (portalRole) {
         const isSuperAdminPortal = portalRole === 'super_admin' || portalRole === 'super-admin';
         const isAdminPortal = portalRole === 'admin';
@@ -32,13 +47,13 @@ export const loginUser = async (req, res) => {
           return res.status(403).json({ message: 'Access Denied: Not authorized for Super Admin Portal.' });
         }
         if (isAdminPortal && !['admin', 'super_admin'].includes(user.role)) {
-          return res.status(403).json({ message: 'Access Denied: Not authorized for Administrator Portal.' });
+          return res.status(403).json({ message: `Access Denied: Account role is '${user.role}'. Administrator portal requires admin privileges.` });
         }
-        if (isReceptionistPortal && user.role !== 'receptionist') {
-          return res.status(403).json({ message: 'Access Denied: Not authorized for Receptionist Portal.' });
+        if (isReceptionistPortal && !['receptionist', 'admin', 'super_admin'].includes(user.role)) {
+          return res.status(403).json({ message: `Access Denied: Account role is '${user.role}'. Receptionist portal requires receptionist or admin privileges.` });
         }
-        if (isEmployeePortal && user.role !== 'employee') {
-          return res.status(403).json({ message: 'Access Denied: Not authorized for Employee Portal.' });
+        if (isEmployeePortal && !['employee', 'admin', 'super_admin'].includes(user.role)) {
+          return res.status(403).json({ message: `Access Denied: Account role is '${user.role}'.` });
         }
       }
 
