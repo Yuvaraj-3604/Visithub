@@ -10,22 +10,17 @@ let isConnecting = false;
 
 let isSeeded = false;
 
-// Auto-seed initial demo accounts into the database
+// Auto-seed initial demo accounts into the database if missing
 const autoSeed = async () => {
   if (isSeeded) return;
   try {
     const User = (await import('../models/User.js')).default;
     const Employee = (await import('../models/Employee.js')).default;
 
-    const count = await User.countDocuments();
-    if (count === 0) {
-      console.log('Seeding initial system accounts into database...');
-      const superPassword = await bcrypt.hash('admin123', 10);
-      const adminPassword = await bcrypt.hash('admin123', 10);
-      const receptionistPassword = await bcrypt.hash('receptionist123', 10);
-      const employeePassword = await bcrypt.hash('employee123', 10);
-
-      const emp1 = await Employee.create({
+    // 1. Ensure default employee host profiles exist
+    let emp1 = await Employee.findOne({ email: 'john@company.com' });
+    if (!emp1) {
+      emp1 = await Employee.create({
         name: 'John Doe',
         email: 'john@company.com',
         department: 'Engineering',
@@ -33,8 +28,11 @@ const autoSeed = async () => {
         phone: '9876543210',
         status: 'active',
       });
+    }
 
-      const emp2 = await Employee.create({
+    let emp2 = await Employee.findOne({ email: 'sarah.smith@company.com' });
+    if (!emp2) {
+      emp2 = await Employee.create({
         name: 'Sarah Smith',
         email: 'sarah.smith@company.com',
         department: 'Human Resources',
@@ -42,15 +40,30 @@ const autoSeed = async () => {
         phone: '9876543211',
         status: 'active',
       });
-
-      await User.create([
-        { username: 'admin.visithub@gmail.com', password: superPassword, role: 'super_admin' },
-        { username: 'admin', password: adminPassword, role: 'admin' },
-        { username: 'receptionist', password: receptionistPassword, role: 'receptionist' },
-        { username: 'employee', password: employeePassword, role: 'employee', employee_id: emp1._id },
-        { username: 'employee2', password: employeePassword, role: 'employee', employee_id: emp2._id },
-      ]);
     }
+
+    // 2. Ensure each pre-seeded test account exists
+    const demoAccounts = [
+      { username: 'admin.visithub@gmail.com', password: 'admin123', role: 'super_admin' },
+      { username: 'admin', password: 'admin123', role: 'admin' },
+      { username: 'receptionist', password: 'receptionist123', role: 'receptionist' },
+      { username: 'employee', password: 'employee123', role: 'employee', empId: emp1._id },
+      { username: 'employee2', password: 'employee123', role: 'employee', empId: emp2._id },
+    ];
+
+    for (const acc of demoAccounts) {
+      const existing = await User.findOne({ username: acc.username });
+      if (!existing) {
+        const hashedPassword = await bcrypt.hash(acc.password, 10);
+        await User.create({
+          username: acc.username,
+          password: hashedPassword,
+          role: acc.role,
+          employee_id: acc.empId || null,
+        });
+      }
+    }
+
     isSeeded = true;
   } catch (err) {
     console.error('Auto-seed check warning:', err.message);
