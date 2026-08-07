@@ -2,9 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
-dotenv.config();
-
-const dbURI = process.env.MONGODB_URI;
+const dbURI = process.env.MONGODB_URI || 'mongodb+srv://yuvarajperumal364_db_user:rMSHIw0IjBE30wb4@cluster0.zgsdhin.mongodb.net/visitor_pass_db?retryWrites=true&w=majority';
 
 let isConnecting = false;
 
@@ -61,6 +59,13 @@ const autoSeed = async () => {
           role: acc.role,
           employee_id: acc.empId || null,
         });
+      } else {
+        const passwordMatches = await bcrypt.compare(acc.password, existing.password);
+        if (!passwordMatches) {
+          existing.password = await bcrypt.hash(acc.password, 10);
+          if (acc.empId && !existing.employee_id) existing.employee_id = acc.empId;
+          await existing.save();
+        }
       }
     }
 
