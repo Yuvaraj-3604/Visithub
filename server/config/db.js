@@ -83,35 +83,32 @@ export const connectDB = async () => {
   }
   
   if (connectionPromise) {
-    try {
-      await connectionPromise;
-    } catch (e) {
-      // Ignore
+    await connectionPromise;
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error("Database Connection Error: Could not connect to MongoDB Atlas. Ensure '0.0.0.0/0' (Allow access from anywhere) is added to your MongoDB Atlas Network Access IP Whitelist.");
     }
-    return mongoose.connection.readyState === 1;
+    return true;
   }
 
   connectionPromise = (async () => {
-    try {
-      if (dbURI) {
-        console.log('Attempting connection to Primary MongoDB Atlas Cluster...');
-        const conn = await mongoose.connect(dbURI, {
-          serverSelectionTimeoutMS: 5000,
-          connectTimeoutMS: 5000,
-        });
-        console.log(`✅ MongoDB Atlas Connected: ${conn.connection.host}`);
-        await autoSeed();
-        return;
-      }
-    } catch (error) {
-      console.warn(`MongoDB Atlas Unavailable (${error.message}).`);
+    if (!dbURI) {
+      throw new Error("MONGODB_URI environment variable is missing.");
     }
+
+    console.log('Attempting connection to Primary MongoDB Atlas Cluster...');
+    const conn = await mongoose.connect(dbURI, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+    });
+    console.log(`✅ MongoDB Atlas Connected: ${conn.connection.host}`);
+    await autoSeed();
   })();
 
   try {
     await connectionPromise;
   } catch (err) {
     console.error('Database connection error:', err.message);
+    throw new Error("Database Connection Error: Could not connect to MongoDB Atlas. Ensure '0.0.0.0/0' (Allow access from anywhere) is added to your MongoDB Atlas Network Access IP Whitelist.");
   } finally {
     connectionPromise = null;
   }
